@@ -1,5 +1,7 @@
 package com.projetoFinalIot.projetoFinal.entidades;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -21,12 +23,13 @@ public class Produto implements Serializable {
 	@Id
 	@Column(name="produto_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer produto_id;
+	private Integer id;
 	
 	@Column(name="nome")
 	private String nome;
 	
 	@Column(name="dataValidade")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private Date dataValidade;
 	
 	@ManyToOne
@@ -40,7 +43,7 @@ public class Produto implements Serializable {
 
 	public Produto(Integer id, String nome, Date dataVaidade, Categoria categoria, Integer quantidade) {
 		super();
-		this.produto_id = id;
+		this.id = id;
 		this.nome = nome;
 		this.dataValidade = dataVaidade;
 		this.categoria = categoria;
@@ -48,11 +51,11 @@ public class Produto implements Serializable {
 	}
 
 	public Integer getId() {
-		return produto_id;
+		return this.id;
 	}
 
 	public void setId(Integer id) {
-		this.produto_id = id;
+		this.id = id;
 	}
 
 	public String getNome() {
@@ -91,7 +94,7 @@ public class Produto implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((produto_id == null) ? 0 : produto_id.hashCode());
+		result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
 		return result;
 	}
 
@@ -104,10 +107,10 @@ public class Produto implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Produto other = (Produto) obj;
-		if (produto_id == null) {
-			if (other.produto_id != null)
+		if (this.id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!produto_id.equals(other.produto_id))
+		} else if (!this.id.equals(other.id))
 			return false;
 		return true;
 	}
