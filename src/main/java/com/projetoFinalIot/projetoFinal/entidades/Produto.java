@@ -41,11 +41,11 @@ public class Produto implements Serializable {
 	
 	public Produto() {}
 
-	public Produto(Integer id, String nome, Date dataVaidade, Categoria categoria, Integer quantidade) {
+	public Produto(Integer id, String nome, Date dataValidade, Categoria categoria, Integer quantidade) {
 		super();
 		this.id = id;
 		this.nome = nome;
-		this.dataValidade = dataVaidade;
+		this.dataValidade = dataValidade;
 		this.categoria = categoria;
 		this.quantidade = quantidade;
 	}
@@ -66,12 +66,12 @@ public class Produto implements Serializable {
 		this.nome = nome;
 	}
 
-	public Date getDataVaidade() {
+	public Date getDataValidade() {
 		return dataValidade;
 	}
 
-	public void setDataVaidade(Date dataVaidade) {
-		this.dataValidade = dataVaidade;
+	public void setDataValidade(Date dataValidade) {
+		this.dataValidade = dataValidade;
 	}
 
 	public Categoria getCategoria() {
