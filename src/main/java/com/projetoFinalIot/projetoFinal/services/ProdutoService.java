@@ -19,4 +19,9 @@ public class ProdutoService {
     public List<Produto> findAll() {
         return produtoRepositorio.findAll();
     }
+
+    public List<Produto> findByNomeStartsWith(String nome) {
+        nome = nome.toUpperCase();
+        return produtoRepositorio.findByNomeContains(nome);
+    }
 }

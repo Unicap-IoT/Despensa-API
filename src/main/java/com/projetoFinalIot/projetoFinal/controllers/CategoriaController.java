@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/categoria")
 public class CategoriaController {
@@ -24,5 +25,10 @@ public class CategoriaController {
     @GetMapping
     public ResponseEntity<List<Categoria>> findAll(){
         return ResponseEntity.status(HttpStatus.OK).body(categoriaService.findAll());
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Categoria> findAll(@PathVariable Integer id){
+        return ResponseEntity.status(HttpStatus.OK).body(categoriaService.findById(id));
     }
 }

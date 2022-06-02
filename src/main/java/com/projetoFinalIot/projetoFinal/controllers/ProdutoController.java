@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/produto")
 public class ProdutoController {
@@ -24,5 +25,10 @@ public class ProdutoController {
     @GetMapping
     public ResponseEntity<List<Produto>> findAll(){
         return ResponseEntity.status(HttpStatus.OK).body(produtoService.findAll());
+    }
+
+    @GetMapping(value = "/nome/{nome}")
+    public ResponseEntity<List<Produto>> findByNome(@PathVariable String nome){
+        return ResponseEntity.status(HttpStatus.OK).body(produtoService.findByNomeStartsWith(nome));
     }
 }

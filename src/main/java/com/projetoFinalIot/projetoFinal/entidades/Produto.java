@@ -24,23 +24,18 @@ public class Produto implements Serializable {
 	@Column(name="produto_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
 	@Column(name="nome")
 	private String nome;
-	
 	@Column(name="dataValidade")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private Date dataValidade;
-	
+	@Column(name="quantidade")
+	private Integer quantidade;
 	@ManyToOne
 	@JoinColumn(name = "categoria_id")
 	private Categoria categoria;
-	
-	@Column(name="quantidade")
-	private Integer quantidade;
-	
-	public Produto() {}
 
+	public Produto() {}
 	public Produto(Integer id, String nome, Date dataValidade, Categoria categoria, Integer quantidade) {
 		super();
 		this.id = id;
