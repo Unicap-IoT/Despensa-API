@@ -31,4 +31,17 @@ public class CategoriaController {
     public ResponseEntity<Categoria> findAll(@PathVariable Integer id){
         return ResponseEntity.status(HttpStatus.OK).body(categoriaService.findById(id));
     }
+    
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Integer id){
+    	categoriaService.delete(id);
+    	return ResponseEntity.noContent().build();
+    }
+    
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Void> update(@RequestBody Categoria cat, @PathVariable Integer id){
+    	cat.setId(id);
+    	categoriaService.update(cat);
+    	return ResponseEntity.noContent().build();
+    }
 }
