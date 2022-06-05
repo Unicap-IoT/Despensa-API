@@ -1,5 +1,6 @@
 package com.projetoFinalIot.projetoFinal.services;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import com.projetoFinalIot.projetoFinal.entidades.Produto;
 import com.projetoFinalIot.projetoFinal.repositorio.ProdutoRepositorio;
 import com.projetoFinalIot.projetoFinal.services.exception.DataIntegretyException;
 import com.projetoFinalIot.projetoFinal.services.exception.ObjectNotFoundException;
+import com.projetoFinalIot.projetoFinal.services.exception.UnauthorizedException;
 
 
 //# indica acréscimo na quantidade
@@ -21,6 +23,8 @@ public class ProdutoService {
     public Produto save(Produto produto) {
     	produto.setNome(produto.getNome().toUpperCase());
         validarNome(produto);
+        validarQuantidade(produto);
+        validarData(produto);
         return produtoRepositorio.save(produto);
     }
 
@@ -46,51 +50,53 @@ public class ProdutoService {
     	produtoRepositorio.deleteById(id);
     }
 
-	public void update(Produto produto, String indicador, Integer quantidade) {
+	public void update(Produto produto) {
 		
-		validarQuantidade(quantidade, produto);
+		validarNome(produto);
+		validarData(produto);
+		validarQuantidade(produto);
+		
 		Produto prod = findById(produto.getId());
 		prod.setNome(produto.getNome());
-		validarNome(prod);
 		prod.setCategoria(produto.getCategoria());
 		prod.setDataValidade(produto.getDataValidade());
-		
-		adicionarOuSbubtrairQuantidade(prod, produto, indicador, quantidade);
-		/*if(prod.getQuantidade() == produto.getQuantidade()) {
-			prod.setQuantidade(produto.getQuantidade());
-		}else if(indicador == '#') {
-			prod.setQuantidade(produto.getQuantidade() + prod.getQuantidade());
-		}else if(indicador == '*'){
-			prod.setQuantidade(prod.getQuantidade() - produto.getQuantidade());
-			validarQuantidade(prod);
-		}*/
+		prod.setQuantidade(produto.getQuantidade());
 		produtoRepositorio.save(prod);	
 		
 	}
 	
 	private void validarNome(Produto produto) {
+		
 		if(produtoRepositorio.findByNome(produto.getNome()).isPresent()){
             throw new DataIntegretyException("Produto "+produto.getNome()+" já cadastrada");
         }
 	}
 	
-	private void validarQuantidade(Integer quantidade, Produto produto) {
+	private void validarQuantidade(Produto produto) {
 		
-		if(quantidade < 0){
-            throw new DataIntegretyException("Quantidade do produto "+produto.getNome()+
+		if(produto.getQuantidade() < 0){
+            throw new UnauthorizedException("Quantidade do produto "+produto.getNome()+
             		" deve ser um número natural!");
         }
 	}
 	
-	private void adicionarOuSbubtrairQuantidade(Produto prod, Produto produto, String indicador, int quantidade) {
+	/*private void adicionarOuSbubtrairQuantidade(Produto prod, Produto produto, String indicador, int quantidade) {
 				
 		if(indicador.equals("#")) {
 			prod.setQuantidade(quantidade + prod.getQuantidade());
 		}else if(indicador.equals("*")){
 			prod.setQuantidade(prod.getQuantidade() - quantidade);
-			validarQuantidade(prod.getQuantidade(), prod);
+			validarQuantidade(prod);
 		}else {
 			prod.setQuantidade(produto.getQuantidade());
+		}
+	}*/
+	
+	private void validarData(Produto prod) {
+		long dataValidade = prod.getDataValidade().getTime();
+		long dataAtual = new Date().getTime();
+		if(dataValidade < dataAtual) {
+			throw new UnauthorizedException("Data de validade expirada!");
 		}
 	}
 }
