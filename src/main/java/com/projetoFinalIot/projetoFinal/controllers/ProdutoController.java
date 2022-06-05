@@ -58,5 +58,4 @@ public class ProdutoController {
     	produtoService.update(produto);
     	return ResponseEntity.noContent().build();
     }
-    
 }

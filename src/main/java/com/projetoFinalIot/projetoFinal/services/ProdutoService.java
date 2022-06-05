@@ -51,16 +51,17 @@ public class ProdutoService {
     }
 
 	public void update(Produto produto) {
-		
-		validarNome(produto);
-		validarData(produto);
-		validarQuantidade(produto);
-		
+				
 		Produto prod = findById(produto.getId());
+		if(!prod.getNome().equalsIgnoreCase(produto.getNome())) {
+			validarNome(produto);
+		}
 		prod.setNome(produto.getNome());
 		prod.setCategoria(produto.getCategoria());
 		prod.setDataValidade(produto.getDataValidade());
 		prod.setQuantidade(produto.getQuantidade());
+		validarData(prod);
+		validarQuantidade(prod);
 		produtoRepositorio.save(prod);	
 		
 	}
@@ -80,18 +81,6 @@ public class ProdutoService {
         }
 	}
 	
-	/*private void adicionarOuSbubtrairQuantidade(Produto prod, Produto produto, String indicador, int quantidade) {
-				
-		if(indicador.equals("#")) {
-			prod.setQuantidade(quantidade + prod.getQuantidade());
-		}else if(indicador.equals("*")){
-			prod.setQuantidade(prod.getQuantidade() - quantidade);
-			validarQuantidade(prod);
-		}else {
-			prod.setQuantidade(produto.getQuantidade());
-		}
-	}*/
-	
 	private void validarData(Produto prod) {
 		long dataValidade = prod.getDataValidade().getTime();
 		long dataAtual = new Date().getTime();
@@ -99,4 +88,5 @@ public class ProdutoService {
 			throw new UnauthorizedException("Data de validade expirada!");
 		}
 	}
+
 }
