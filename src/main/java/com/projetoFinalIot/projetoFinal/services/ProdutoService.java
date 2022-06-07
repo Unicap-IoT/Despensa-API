@@ -23,6 +23,8 @@ public class ProdutoService {
 
     @Autowired
     private ProdutoRepositorio produtoRepositorio;
+	@Autowired
+	private CategoriaService categoriaService;
     public Produto save(Produto produto) {
     	produto.setNome(produto.getNome().toUpperCase());
         validarNome(produto);
@@ -53,20 +55,15 @@ public class ProdutoService {
     	produtoRepositorio.deleteById(id);
     }
 
-	public void update(Produto produto) {
-				
-		Produto prod = findById(produto.getId());
-		if(!prod.getNome().equalsIgnoreCase(produto.getNome())) {
+	public Produto update(Produto produto) {
+		findById(produto.getId());
+		if(!produto.getNome().equalsIgnoreCase(produto.getNome())) {
 			validarNome(produto);
 		}
-		prod.setNome(produto.getNome());
-		prod.setCategoria(produto.getCategoria());
-		prod.setDataValidade(produto.getDataValidade());
-		prod.setQuantidade(produto.getQuantidade());
-		validarData(prod);
-		validarQuantidade(prod);
-		produtoRepositorio.save(prod);	
-		
+		produto.setCategoria(categoriaService.findById(produto.getCategoria().getId()));
+		validarData(produto);
+		validarQuantidade(produto);
+		return produtoRepositorio.save(produto);
 	}
 	
 	public void updateQuantidade(ProdutoAux prodAux) {
@@ -96,17 +93,15 @@ public class ProdutoService {
 	}
 	
 	private void validarNome(Produto produto) {
-		
 		if(produtoRepositorio.findByNome(produto.getNome()).isPresent()){
             throw new DataIntegretyException("Produto "+produto.getNome()+" já cadastrada");
         }
 	}
 	
 	private void validarQuantidade(Produto produto) {
-		
 		if(produto.getQuantidade() < 0){
-            throw new UnauthorizedException("Quantidade do produto "+produto.getNome()+
-            		" deve ser um número natural!");
+            throw new DataIntegretyException(
+					"Quantidade do produto "+produto.getNome()+ " deve ser um número natural!");
         }
 	}
 	

@@ -55,10 +55,9 @@ public class ProdutoController {
     }
     
     @PutMapping(value = {"/{id}"})
-    public ResponseEntity<Void> update(@RequestBody Produto produto, @PathVariable Integer id){
+    public ResponseEntity<Produto> update(@RequestBody Produto produto, @PathVariable Integer id){
     	produto.setId(id);
-    	produtoService.update(produto);
-    	return ResponseEntity.noContent().build();
+    	return ResponseEntity.status(HttpStatus.OK).body(produtoService.update(produto));
     }
     
     @PutMapping(value = {"/{id}/quantidade/"})
