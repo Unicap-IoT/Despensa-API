@@ -85,7 +85,6 @@ public class ProdutoService {
 		for(Produto prod : lista) {
 			if(alarmeValidade(prod.getDataValidade())) {
 				listaStr.add("O produto " + prod.getNome() + " está perto de vencer!");
-				System.out.println("Opa to aqui!   verificarValidade    fdgdff");
 			}
 		}
 		
