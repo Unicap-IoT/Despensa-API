@@ -56,14 +56,20 @@ public class ProdutoService {
     }
 
 	public Produto update(Produto produto) {
-		findById(produto.getId());
-		if(!produto.getNome().equalsIgnoreCase(produto.getNome())) {
+		
+		Produto prod = findById(produto.getId());
+		produto.setNome(produto.getNome().toUpperCase());
+		if(!prod.getNome().equalsIgnoreCase(produto.getNome())) {
 			validarNome(produto);
 		}
-		produto.setCategoria(categoriaService.findById(produto.getCategoria().getId()));
-		validarData(produto);
-		validarQuantidade(produto);
-		return produtoRepositorio.save(produto);
+		prod.setNome(produto.getNome().toUpperCase());
+		prod.setCategoria(categoriaService.findById(produto.getCategoria().getId()));
+		prod.setDataValidade(produto.getDataValidade());
+		prod.setQuantidade(produto.getQuantidade());
+		validarData(prod);
+		validarQuantidade(prod);
+		return produtoRepositorio.save(prod);
+		
 	}
 	
 	public void updateQuantidade(ProdutoAux prodAux) {
