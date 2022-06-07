@@ -1,5 +1,6 @@
 package com.projetoFinalIot.projetoFinal.services;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.projetoFinalIot.projetoFinal.entidades.Produto;
 import com.projetoFinalIot.projetoFinal.entidades.ProdutoAux;
+import com.projetoFinalIot.projetoFinal.entidades.constantes.ProdutoConst;
 import com.projetoFinalIot.projetoFinal.repositorio.ProdutoRepositorio;
 import com.projetoFinalIot.projetoFinal.services.exception.DataIntegretyException;
 import com.projetoFinalIot.projetoFinal.services.exception.ObjectNotFoundException;
@@ -80,6 +82,19 @@ public class ProdutoService {
 		produtoRepositorio.save(prod);
 	} 
 	
+	public List<String> verificarValidade() {
+		List<Produto> lista = findAll();
+		List<String> listaStr = new ArrayList<>();
+		for(Produto prod : lista) {
+			if(alarmeValidade(prod.getDataValidade())) {
+				listaStr.add("O produto " + prod.getNome() + " está perto de vencer!");
+				System.out.println("Opa to aqui!   verificarValidade    fdgdff");
+			}
+		}
+		
+		return listaStr;
+	}
+	
 	private void validarNome(Produto produto) {
 		
 		if(produtoRepositorio.findByNome(produto.getNome()).isPresent()){
@@ -97,12 +112,24 @@ public class ProdutoService {
 	
 	private void validarData(Produto prod) {
 		long dataValidade = prod.getDataValidade().getTime();
-		long dataAtual = new Date().getTime();
+		long dataAtual = dataParalMills();
 		if(dataValidade < dataAtual) {
 			throw new UnauthorizedException("Data de validade expirada!");
 		}
 	}
 
+	private Long dataParalMills() {
+		return new Date().getTime();
+	}
 	
-
+	private long descontoDataValidadeMills(Date data) {
+		return (data.getTime() - (ProdutoConst.DIASVALIDADE * 3600 * 1000 * 24));
+	}
+	
+	private boolean alarmeValidade(Date dataValidade) {
+		long dataAlarme = descontoDataValidadeMills(dataValidade);
+		long dataAtual = dataParalMills();
+		return (dataAtual >= dataAlarme) ? true : false;
+		
+	}
 }

@@ -68,4 +68,9 @@ public class ProdutoController {
     	produtoService.updateQuantidade(prodAux);
     	return ResponseEntity.noContent().build();
     }
+    
+    @GetMapping(value = "/validade")
+    public ResponseEntity<List<String>> vencimentoValidade(){
+    	return ResponseEntity.status(HttpStatus.OK).body(produtoService.verificarValidade());
+    }
 }
