@@ -7,14 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.projetoFinalIot.projetoFinal.entidades.Produto;
+import com.projetoFinalIot.projetoFinal.entidades.ProdutoAux;
 import com.projetoFinalIot.projetoFinal.repositorio.ProdutoRepositorio;
 import com.projetoFinalIot.projetoFinal.services.exception.DataIntegretyException;
 import com.projetoFinalIot.projetoFinal.services.exception.ObjectNotFoundException;
 import com.projetoFinalIot.projetoFinal.services.exception.UnauthorizedException;
 
 
-//# indica acréscimo na quantidade
-//* indica decréscimo na quantidade
+//# indica acréscimo na quantidade - encoded %23
+//* indica decréscimo na quantidade 
 @Service
 public class ProdutoService {
 
@@ -66,6 +67,19 @@ public class ProdutoService {
 		
 	}
 	
+	public void updateQuantidade(ProdutoAux prodAux) {
+		Produto prod = findById(prodAux.getId());
+		if(prodAux.getIndicador().equalsIgnoreCase("#")) {
+			prod.setQuantidade(prod.getQuantidade() + prodAux.getQtd());
+		}else if(prodAux.getIndicador().equalsIgnoreCase("*")) {
+			prod.setQuantidade(prod.getQuantidade() - prodAux.getQtd());
+			validarQuantidade(prod);
+		}else {
+			throw new DataIntegretyException("O indicador da operação não está presente!");
+		}
+		produtoRepositorio.save(prod);
+	} 
+	
 	private void validarNome(Produto produto) {
 		
 		if(produtoRepositorio.findByNome(produto.getNome()).isPresent()){
@@ -88,5 +102,7 @@ public class ProdutoService {
 			throw new UnauthorizedException("Data de validade expirada!");
 		}
 	}
+
+	
 
 }

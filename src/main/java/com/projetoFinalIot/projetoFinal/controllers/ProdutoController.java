@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projetoFinalIot.projetoFinal.entidades.Produto;
+import com.projetoFinalIot.projetoFinal.entidades.ProdutoAux;
 import com.projetoFinalIot.projetoFinal.services.ProdutoService;
 
 @CrossOrigin("*")
@@ -56,6 +58,14 @@ public class ProdutoController {
     public ResponseEntity<Void> update(@RequestBody Produto produto, @PathVariable Integer id){
     	produto.setId(id);
     	produtoService.update(produto);
+    	return ResponseEntity.noContent().build();
+    }
+    
+    @PutMapping(value = {"/{id}/quantidade/"})
+    public ResponseEntity<Void> updateQuantidade(@PathVariable Integer id, @RequestParam Integer qtd,
+    		@RequestParam String ind){
+    	ProdutoAux prodAux = new ProdutoAux(id, qtd, ind);
+    	produtoService.updateQuantidade(prodAux);
     	return ResponseEntity.noContent().build();
     }
 }
