@@ -2,6 +2,8 @@ package com.projetoFinalIot.projetoFinal.controllers;
 
 import java.util.List;
 
+import com.projetoFinalIot.projetoFinal.entidades.dtos.ProdutoDto;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,8 @@ import com.projetoFinalIot.projetoFinal.entidades.Produto;
 import com.projetoFinalIot.projetoFinal.entidades.ProdutoAux;
 import com.projetoFinalIot.projetoFinal.services.ProdutoService;
 
+import javax.validation.Valid;
+
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/produto")
@@ -29,7 +33,9 @@ public class ProdutoController {
     private ProdutoService produtoService;
 
     @PostMapping
-    public ResponseEntity<Produto> save(@RequestBody Produto produto){
+    public ResponseEntity<Produto> save(@RequestBody @Valid ProdutoDto produtoDto){
+        Produto produto = new Produto();
+        BeanUtils.copyProperties(produtoDto, produto);
         return ResponseEntity.status(HttpStatus.CREATED).body(produtoService.save(produto));
     }
     
