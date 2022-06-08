@@ -28,6 +28,7 @@ public class ProdutoService {
     public Produto save(Produto produto) {
     	produto.setNome(produto.getNome().toUpperCase());
         validarNome(produto);
+        categoriaService.findById(produto.getCategoria().getId());
         validarQuantidade(produto);
         validarData(produto);
         return produtoRepositorio.save(produto);
