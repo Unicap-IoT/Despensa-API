@@ -1,5 +1,6 @@
 package com.projetoFinalIot.projetoFinal.services;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,11 +18,12 @@ import com.projetoFinalIot.projetoFinal.services.exception.ObjectNotFoundExcepti
 import com.projetoFinalIot.projetoFinal.services.exception.UnauthorizedException;
 
 
-//# indica acréscimo na quantidade - encoded %23
-//* indica decréscimo na quantidade 
+//0 indica acréscimo na quantidade 
+//1 indica decréscimo na quantidade 
 @Service
 public class ProdutoService {
 
+	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     @Autowired
     private ProdutoRepositorio produtoRepositorio;
 	@Autowired
@@ -30,7 +32,7 @@ public class ProdutoService {
     	produto.setNome(produto.getNome().toUpperCase());
         validarNome(produto);
         categoriaService.findById(produto.getCategoria().getId());
-        validarQuantidade(produto);
+        validarQuantidade(produto, ProdutoConst.CONTROLEERROSAVE);
         validarData(produto);
         return produtoRepositorio.save(produto);
     }
@@ -68,30 +70,38 @@ public class ProdutoService {
 		BeanUtils.copyProperties(produto, produtoAux);
 
 		validarData(produtoAux);
-		validarQuantidade(produtoAux);
+		validarQuantidade(produtoAux, ProdutoConst.CONTROLEERROSAVE);
 		return produtoRepositorio.save(produtoAux);
 		
 	}
 	
-	public void updateQuantidade(ProdutoAux prodAux) {
+	public Produto updateQuantidade(ProdutoAux prodAux) {
 		Produto prod = findById(prodAux.getId());
-		if(prodAux.getIndicador().equalsIgnoreCase("#")) {
+		if(prodAux.getIndicador().equalsIgnoreCase(ProdutoConst.SOMARQUANTIDADE)) {
 			prod.setQuantidade(prod.getQuantidade() + prodAux.getQtd());
-		}else if(prodAux.getIndicador().equalsIgnoreCase("*")) {
+		}else if(prodAux.getIndicador().equalsIgnoreCase(ProdutoConst.SUBTRAIRQUANTIDADE)) {
 			prod.setQuantidade(prod.getQuantidade() - prodAux.getQtd());
-			validarQuantidade(prod);
+			validarQuantidade(prod, ProdutoConst.CONTROLEERROUPDATE);
+			
 		}else {
 			throw new DataIntegretyException("O indicador da operação não está presente!");
 		}
-		produtoRepositorio.save(prod);
+		return produtoRepositorio.save(prod);
 	} 
 	
+	public String alarmeQuantidade(Produto produto) {
+		return (produto.getQuantidade() <= ProdutoConst.LIMITEQUANTIDADE) ? "O produto " + produto.getNome() +
+				" está acabando! Restante : " + produto.getQuantidade() : "ok";
+		
+	}
+
 	public List<String> verificarValidade() {
 		List<Produto> lista = findAll();
 		List<String> listaStr = new ArrayList<>();
 		for(Produto prod : lista) {
 			if(alarmeValidade(prod.getDataValidade())) {
-				listaStr.add("O produto " + prod.getNome() + " está perto de vencer!");
+				listaStr.add("O produto " + prod.getNome() + " "
+						+ "está perto de vencer! Data de Validade: " + sdf.format(prod.getDataValidade()));
 			}
 		}
 		
@@ -104,10 +114,10 @@ public class ProdutoService {
         }
 	}
 	
-	private void validarQuantidade(Produto produto) {
+	private void validarQuantidade(Produto produto, int controleErro) {
 		if(produto.getQuantidade() < 0){
-            throw new DataIntegretyException(
-					"Quantidade do produto "+produto.getNome()+ " deve ser um número natural!");
+            throw new UnauthorizedException(
+					ProdutoConst.LISTAERRO[controleErro] + produto.getNome());
         }
 	}
 	
