@@ -35,12 +35,13 @@ public class CategoriaService {
     	categoriaRepositorio.deleteById(id);
     }
     
-    public void update(Categoria cat) {
-    	Categoria categoria = findById(cat.getId());
-    	categoria.setNome(cat.getNome().toUpperCase());
-    	validarNome(categoria);
-    	categoriaRepositorio.save(categoria);
-    	
+    public Categoria update(Categoria categoria) {
+        categoria.setNome(categoria.getNome().toUpperCase());
+        Categoria categoriaAux = findById(categoria.getId());
+        if(!categoria.getNome().equalsIgnoreCase(categoriaAux.getNome())){
+            validarNome(categoria);
+        }
+    	return categoriaRepositorio.save(categoria);
     }
     
     private void validarNome(Categoria cat) {

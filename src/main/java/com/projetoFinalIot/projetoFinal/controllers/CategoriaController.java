@@ -49,10 +49,9 @@ public class CategoriaController {
     }
     
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Void> update(@RequestBody Categoria cat, @PathVariable Integer id){
-    	cat.setId(id);
-    	categoriaService.update(cat);
-    	return ResponseEntity.noContent().build();
+    public ResponseEntity<Categoria> update(@RequestBody Categoria categoria, @PathVariable Integer id){
+    	categoria.setId(id);
+    	return ResponseEntity.status(HttpStatus.OK).body(categoriaService.update(categoria));
     }
     
     @GetMapping(value = "/{id}/produto")
