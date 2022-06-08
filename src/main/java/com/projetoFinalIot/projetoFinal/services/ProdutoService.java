@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,19 +58,18 @@ public class ProdutoService {
     }
 
 	public Produto update(Produto produto) {
-		
-		Produto prod = findById(produto.getId());
+		Produto produtoAux = findById(produto.getId());
 		produto.setNome(produto.getNome().toUpperCase());
-		if(!prod.getNome().equalsIgnoreCase(produto.getNome())) {
+		if(!produtoAux.getNome().equalsIgnoreCase(produto.getNome())) {
 			validarNome(produto);
 		}
-		prod.setNome(produto.getNome().toUpperCase());
-		prod.setCategoria(categoriaService.findById(produto.getCategoria().getId()));
-		prod.setDataValidade(produto.getDataValidade());
-		prod.setQuantidade(produto.getQuantidade());
-		validarData(prod);
-		validarQuantidade(prod);
-		return produtoRepositorio.save(prod);
+		produto.setCategoria(categoriaService.findById(produto.getCategoria().getId()));
+
+		BeanUtils.copyProperties(produto, produtoAux);
+
+		validarData(produtoAux);
+		validarQuantidade(produtoAux);
+		return produtoRepositorio.save(produtoAux);
 		
 	}
 	
