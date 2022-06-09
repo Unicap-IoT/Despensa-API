@@ -2,19 +2,24 @@ package com.projetoFinalIot.projetoFinal.entidades.dtos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.projetoFinalIot.projetoFinal.entidades.Categoria;
+import org.hibernate.validator.constraints.Range;
 
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class ProdutoDto {
-    @NotEmpty
+    @NotEmpty(message = "Informe o nome do produto")
     private String nome;
+
+    @Future(message = "A data inválida para validade")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private Date dataValidade;
     @NotNull
+    @Range(min = 0, message = "A quantidade não pode ser menor que zero")
     private Integer quantidade;
-    @NotNull
+    @NotNull(message = "Informe a categoria do produto")
     private Categoria categoria;
 
     public ProdutoDto(){}
