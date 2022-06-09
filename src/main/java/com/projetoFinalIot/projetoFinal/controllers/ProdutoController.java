@@ -33,7 +33,7 @@ public class ProdutoController {
     private ProdutoService produtoService;
 
     @PostMapping
-    public ResponseEntity<Produto> save(@RequestBody @Valid ProdutoDto produtoDto){
+    public ResponseEntity<Produto> save(@Valid @RequestBody ProdutoDto produtoDto){
         Produto produto = new Produto();
         BeanUtils.copyProperties(produtoDto, produto);
         return ResponseEntity.status(HttpStatus.CREATED).body(produtoService.save(produto));

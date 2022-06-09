@@ -16,4 +16,45 @@ public class ProdutoDto {
     private Integer quantidade;
     @NotNull
     private Categoria categoria;
+
+    public ProdutoDto(){}
+
+    public ProdutoDto(String nome, Date dataValidade, Integer quantidade, Categoria categoria) {
+        this.nome = nome;
+        this.dataValidade = dataValidade;
+        this.quantidade = quantidade;
+        this.categoria = categoria;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Date getDataValidade() {
+        return dataValidade;
+    }
+
+    public void setDataValidade(Date dataValidade) {
+        this.dataValidade = dataValidade;
+    }
+
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
 }
