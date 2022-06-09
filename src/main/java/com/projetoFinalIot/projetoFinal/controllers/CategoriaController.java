@@ -59,4 +59,10 @@ public class CategoriaController {
     	Categoria cat = categoriaService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(cat.getProdutos());
     }
+
+    @GetMapping(value = "/nome/{nome}")
+    public ResponseEntity<List<Categoria>> findByNameContains(@PathVariable String nome){
+        nome = nome.toUpperCase();
+        return ResponseEntity.status(HttpStatus.OK).body(categoriaService.findByNomeContains(nome));
+    }
 }

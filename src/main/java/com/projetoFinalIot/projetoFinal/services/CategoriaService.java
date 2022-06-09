@@ -49,5 +49,8 @@ public class CategoriaService {
     		throw new DataIntegretyException("Categoria "+cat.getNome()+" já cadastrada");
     	}
     }
-    
+
+    public List<Categoria> findByNomeContains(String nome) {
+        return categoriaRepositorio.findByNomeContains(nome);
+    }
 }
