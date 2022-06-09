@@ -67,17 +67,20 @@ public class ProdutoController {
     }
     
     @PutMapping(value = {"/{id}/quantidade/"})
-    public ResponseEntity<?> updateQuantidade(@PathVariable Integer id, @RequestParam Integer qtd,
+    public ResponseEntity<Produto> updateQuantidade(@PathVariable Integer id, @RequestParam Integer qtd,
     		@RequestParam String ind){
     	ProdutoAux prodAux = new ProdutoAux(id, qtd, ind);
-    	Produto produto = produtoService.updateQuantidade(prodAux);
-    	String resultado = produtoService.alarmeQuantidade(produto);
-    	return (resultado.equalsIgnoreCase("ok")) ? ResponseEntity.status(HttpStatus.OK).body(produto):
-    		ResponseEntity.status(HttpStatus.OK).body(resultado);
+    	return ResponseEntity.status(HttpStatus.OK).body(produtoService.updateQuantidade(prodAux));
+    		
     }
     
     @GetMapping(value = "/validade")
-    public ResponseEntity<List<String>> vencimentoValidade(){
+    public ResponseEntity<List<Produto>> vencimentoValidade(){
     	return ResponseEntity.status(HttpStatus.OK).body(produtoService.verificarValidade());
+    }
+    
+    @GetMapping(value = "/alertaquantidade")
+    public ResponseEntity<List<Produto>> alarmeQuantidade(){
+    	return ResponseEntity.status(HttpStatus.OK).body(produtoService.alarmeQuantidade());
     }
 }

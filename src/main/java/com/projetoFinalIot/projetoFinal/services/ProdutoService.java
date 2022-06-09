@@ -1,6 +1,5 @@
 package com.projetoFinalIot.projetoFinal.services;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +22,7 @@ import com.projetoFinalIot.projetoFinal.services.exception.UnauthorizedException
 @Service
 public class ProdutoService {
 
-	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	//private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     @Autowired
     private ProdutoRepositorio produtoRepositorio;
 	@Autowired
@@ -81,6 +80,7 @@ public class ProdutoService {
 			prod.setQuantidade(prod.getQuantidade() + prodAux.getQtd());
 		}else if(prodAux.getIndicador().equalsIgnoreCase(ProdutoConst.SUBTRAIRQUANTIDADE)) {
 			prod.setQuantidade(prod.getQuantidade() - prodAux.getQtd());
+			
 			validarQuantidade(prod, ProdutoConst.CONTROLEERROUPDATE);
 			
 		}else {
@@ -89,23 +89,29 @@ public class ProdutoService {
 		return produtoRepositorio.save(prod);
 	} 
 	
-	public String alarmeQuantidade(Produto produto) {
-		return (produto.getQuantidade() <= ProdutoConst.LIMITEQUANTIDADE) ? "O produto " + produto.getNome() +
-				" está acabando! Restante : " + produto.getQuantidade() : "ok";
-		
-	}
-
-	public List<String> verificarValidade() {
+	public List<Produto> alarmeQuantidade() {
+				
 		List<Produto> lista = findAll();
-		List<String> listaStr = new ArrayList<>();
+		List<Produto> listaProd = new ArrayList<>();
 		for(Produto prod : lista) {
-			if(alarmeValidade(prod.getDataValidade())) {
-				listaStr.add("O produto " + prod.getNome() + " "
-						+ "está perto de vencer! Data de Validade: " + sdf.format(prod.getDataValidade()));
+			if(prod.getQuantidade() <= ProdutoConst.LIMITEQUANTIDADE) {
+				listaProd.add(prod);
 			}
 		}
 		
-		return listaStr;
+		return listaProd;
+	}
+
+	public List<Produto> verificarValidade() {
+		List<Produto> lista = findAll();
+		List<Produto> listaProd = new ArrayList<>();
+		for(Produto prod : lista) {
+			if(alarmeValidade(prod.getDataValidade())) {
+				listaProd.add(prod);
+			}
+		}
+		
+		return listaProd;
 	}
 	
 	private void validarNome(Produto produto) {
