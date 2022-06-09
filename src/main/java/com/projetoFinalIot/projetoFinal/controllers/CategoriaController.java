@@ -2,6 +2,8 @@ package com.projetoFinalIot.projetoFinal.controllers;
 
 import java.util.List;
 
+import com.projetoFinalIot.projetoFinal.entidades.dtos.CategoriaDto;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,8 @@ import com.projetoFinalIot.projetoFinal.entidades.Categoria;
 import com.projetoFinalIot.projetoFinal.entidades.Produto;
 import com.projetoFinalIot.projetoFinal.services.CategoriaService;
 
+import javax.validation.Valid;
+
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/categoria")
@@ -28,7 +32,9 @@ public class CategoriaController {
     public CategoriaService categoriaService;
 
     @PostMapping
-    public ResponseEntity<Categoria> save(@RequestBody Categoria categoria){
+    public ResponseEntity<Categoria> save(@Valid @RequestBody CategoriaDto categoriaDto){
+        Categoria categoria = new Categoria();
+        BeanUtils.copyProperties(categoriaDto, categoria);
         return ResponseEntity.status(HttpStatus.CREATED).body(categoriaService.save(categoria));
     }
 
