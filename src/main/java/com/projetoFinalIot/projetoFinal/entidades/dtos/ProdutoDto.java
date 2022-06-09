@@ -16,7 +16,7 @@ public class ProdutoDto {
     @Future(message = "A data inválida para validade")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private Date dataValidade;
-    @NotNull
+    @NotNull(message = "Informe a quantidade do produto")
     @Range(min = 0, message = "A quantidade não pode ser menor que zero")
     private Integer quantidade;
     @NotNull(message = "Informe a categoria do produto")

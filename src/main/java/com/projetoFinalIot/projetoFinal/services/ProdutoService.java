@@ -63,11 +63,7 @@ public class ProdutoService {
 			validarNome(produto);
 		}
 		produto.setCategoria(categoriaService.findById(produto.getCategoria().getId()));
-
 		BeanUtils.copyProperties(produto, produtoAux);
-
-		validarData(produtoAux);
-		validarQuantidade(produtoAux, ProdutoConst.CONTROLEERROSAVE);
 		return produtoRepositorio.save(produtoAux);
 		
 	}

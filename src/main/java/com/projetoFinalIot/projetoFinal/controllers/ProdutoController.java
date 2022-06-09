@@ -61,8 +61,10 @@ public class ProdutoController {
     }
     
     @PutMapping(value = {"/{id}"})
-    public ResponseEntity<Produto> update(@RequestBody Produto produto, @PathVariable Integer id){
-    	produto.setId(id);
+    public ResponseEntity<Produto> update(@Valid @RequestBody ProdutoDto produtoDto, @PathVariable Integer id){
+    	Produto produto = new Produto();
+        BeanUtils.copyProperties(produtoDto, produto);
+        produto.setId(id);
     	return ResponseEntity.status(HttpStatus.OK).body(produtoService.update(produto));
     }
     
